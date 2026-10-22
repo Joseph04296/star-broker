@@ -1,0 +1,108 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { MailQuestion, Clock, CheckCircle2, ArrowRight, FileText, Users, UserPlus } from "lucide-react";
+import { getQuotes, getLeads } from "../lib/api";
+
+export default function Dashboard() {
+  const [quotes, setQuotes] = useState(null);
+  const [leads, setLeads] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getQuotes().then(setQuotes).catch((err) => setError(err.message));
+    getLeads().then(setLeads).catch(() => {});
+  }, []);
+
+  const counts = quotes
+    ? {
+        new: quotes.filter((q) => q.status === "new").length,
+        contacted: quotes.filter((q) => q.status === "contacted").length,
+        closed: quotes.filter((q) => q.status === "closed").length,
+      }
+    : null;
+
+  return (
+    <div className="p-8 max-w-5xl">
+      <p className="text-xs font-semibold uppercase tracking-widest text-brand-dark mb-1">Overview</p>
+      <h1 className="font-display text-3xl text-charcoal mb-8">Dashboard</h1>
+
+      {error && <p className="text-sm text-brand-dark mb-6">{error}</p>}
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <Link
+          to="/admin/leads"
+          className="group bg-white border border-charcoal/10 rounded-2xl p-6 shadow-card hover:-translate-y-0.5 hover:shadow-lift transition-all"
+        >
+          <span className="w-11 h-11 rounded-xl bg-brand/10 text-brand flex items-center justify-center mb-4">
+            <UserPlus size={22} />
+          </span>
+          <p className="text-3xl font-display text-charcoal">{leads ? leads.length : "—"}</p>
+          <p className="text-sm text-ink/60 group-hover:text-charcoal transition-colors">New leads</p>
+        </Link>
+        <Link
+          to="/admin/quotes?status=new"
+          className="group bg-white border border-charcoal/10 rounded-2xl p-6 shadow-card hover:-translate-y-0.5 hover:shadow-lift transition-all"
+        >
+          <span className="w-11 h-11 rounded-xl bg-brand/10 text-brand flex items-center justify-center mb-4">
+            <MailQuestion size={22} />
+          </span>
+          <p className="text-3xl font-display text-charcoal">{counts ? counts.new : "—"}</p>
+          <p className="text-sm text-ink/60 group-hover:text-charcoal transition-colors">New quote requests</p>
+        </Link>
+        <Link
+          to="/admin/quotes?status=contacted"
+          className="group bg-white border border-charcoal/10 rounded-2xl p-6 shadow-card hover:-translate-y-0.5 hover:shadow-lift transition-all"
+        >
+          <span className="w-11 h-11 rounded-xl bg-charcoal/10 text-charcoal flex items-center justify-center mb-4">
+            <Clock size={22} />
+          </span>
+          <p className="text-3xl font-display text-charcoal">{counts ? counts.contacted : "—"}</p>
+          <p className="text-sm text-ink/60 group-hover:text-charcoal transition-colors">Contacted, awaiting close</p>
+        </Link>
+        <Link
+          to="/admin/quotes?status=closed"
+          className="group bg-white border border-charcoal/10 rounded-2xl p-6 shadow-card hover:-translate-y-0.5 hover:shadow-lift transition-all"
+        >
+          <span className="w-11 h-11 rounded-xl bg-charcoal/10 text-charcoal flex items-center justify-center mb-4">
+            <CheckCircle2 size={22} />
+          </span>
+          <p className="text-3xl font-display text-charcoal">{counts ? counts.closed : "—"}</p>
+          <p className="text-sm text-ink/60 group-hover:text-charcoal transition-colors">Closed</p>
+        </Link>
+      </div>
+
+      <div className="grid sm:grid-cols-3 gap-5">
+        <Link
+          to="/admin/quotes"
+          className="flex items-center justify-between bg-brand text-white rounded-2xl p-6 hover:bg-brand-dark hover:shadow-lift transition-all"
+        >
+          <div>
+            <p className="font-display text-lg mb-1">Quote Requests</p>
+            <p className="text-sm text-white/65">Review and follow up on incoming requests</p>
+          </div>
+          <ArrowRight size={20} className="shrink-0" />
+        </Link>
+        <Link
+          to="/admin/content"
+          className="flex items-center justify-between bg-white border border-charcoal/10 rounded-2xl p-6 shadow-card hover:-translate-y-0.5 hover:shadow-lift transition-all"
+        >
+          <div>
+            <p className="font-display text-lg text-charcoal mb-1 flex items-center gap-2"><FileText size={18} className="text-brand" /> Site Content</p>
+            <p className="text-sm text-ink/60">Edit contact details, FAQs, news & tips</p>
+          </div>
+          <ArrowRight size={20} className="text-charcoal shrink-0" />
+        </Link>
+        <Link
+          to="/admin/users"
+          className="flex items-center justify-between bg-white border border-charcoal/10 rounded-2xl p-6 shadow-card hover:-translate-y-0.5 hover:shadow-lift transition-all"
+        >
+          <div>
+            <p className="font-display text-lg text-charcoal mb-1 flex items-center gap-2"><Users size={18} className="text-brand" /> Admin Users</p>
+            <p className="text-sm text-ink/60">Manage who can sign in</p>
+          </div>
+          <ArrowRight size={20} className="text-charcoal shrink-0" />
+        </Link>
+      </div>
+    </div>
+  );
+}

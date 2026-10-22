@@ -1,0 +1,216 @@
+import { useState } from "react";
+import { Phone, Mail, MapPin, Send, CheckCircle2, AlertCircle } from "lucide-react";
+import PageHero from "../components/PageHero";
+import SectionHeading from "../components/SectionHeading";
+import Reveal from "../components/Reveal";
+import { IMAGES } from "../data/site";
+import { useSiteContent } from "../site/SiteContentContext";
+import { submitLead } from "../lib/api";
+
+const inputCls =
+  "w-full bg-white border border-charcoal/15 rounded-xl px-4 py-3.5 text-sm focus-ring focus:border-brand transition-colors placeholder:text-charcoal/35";
+
+export default function Contact() {
+  const { site } = useSiteContent();
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSending(true);
+    setError("");
+    try {
+      await submitLead(form);
+      setSent(true);
+    } catch (err) {
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  const cards = [
+    {
+      icon: Phone,
+      title: "Call Us",
+      value: (
+        <span>
+          {site.phone}
+          <br />
+          {site.phone2}
+        </span>
+      ),
+      href: site.phoneHref,
+    },
+    {
+      icon: Mail,
+      title: "Email Us",
+      value: site.email,
+      href: `mailto:${site.email}`,
+    },
+    {
+      icon: MapPin,
+      title: "Visit Us",
+      value: `${site.address}, ${site.city}`,
+      href: null,
+    },
+  ];
+
+  return (
+    <div>
+      <PageHero
+        title="Let's Start With a Conversation."
+        description="Whether you're exploring insurance options or want to discuss your organisation's protection needs, we'd be happy to hear from you."
+        image={IMAGES.office}
+      />
+
+      {/* Contact cards */}
+      <section className="py-16 md:py-20 bg-mist">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {cards.map((c, idx) => {
+            const inner = (
+              <>
+                <span className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-brand/10 text-brand flex items-center justify-center mb-4 sm:mb-5 group-hover:bg-brand group-hover:text-white transition-colors">
+                  <c.icon size={21} />
+                </span>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-charcoal/45 mb-1.5">{c.title}</h3>
+                <p className="font-display text-base sm:text-lg text-charcoal">{c.value}</p>
+              </>
+            );
+            return (
+              <Reveal key={c.title} delay={idx * 80}>
+                {c.href ? (
+                  <a
+                    href={c.href}
+                    target={c.href.startsWith("http") ? "_blank" : undefined}
+                    rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="group bg-white border border-charcoal/10 rounded-2xl p-5 sm:p-7 hover:shadow-card hover:border-brand/40 transition-all block h-full focus-ring"
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <div className="bg-white border border-charcoal/10 rounded-2xl p-5 sm:p-7 h-full">
+                    {inner}
+                  </div>
+                )}
+              </Reveal>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Map + form */}
+      <section className="py-20 md:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <div>
+            <SectionHeading
+              eyebrow="Find Us"
+              title="Our Office in"
+              accent="Blantyre."
+              description="Our office is at Delamere House, 5th Floor, Room 515, North East Wing — but for anything that can be handled remotely, we're only a call or email away."
+              className="mb-8"
+            />
+            <Reveal className="rounded-2xl overflow-hidden border border-charcoal/10 shadow-card mb-8">
+              <iframe
+                title="Star Insurance Brokers Ltd — Delamere House, Blantyre"
+                src="https://www.google.com/maps?q=Delamere+House+Blantyre+Malawi&output=embed"
+                width="100%"
+                height="360"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="grayscale-[0.15]"
+              />
+            </Reveal>
+            <Reveal delay={120} className="flex items-start gap-4 bg-mist border border-charcoal/10 rounded-2xl p-6">
+              <MapPin size={22} className="text-brand shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-display text-lg text-charcoal mb-1">Office Address</h3>
+                <p className="text-charcoal/65 leading-relaxed">{site.address},<br />{site.city}{site.postal ? <><br />{site.postal}</> : null}</p>
+              </div>
+            </Reveal>
+          </div>
+
+          <div className="lg:sticky lg:top-24">
+            {sent ? (
+              <div className="bg-white border border-charcoal/10 rounded-3xl p-10 md:p-14 text-center shadow-card animate-fadeup">
+                <span className="w-20 h-20 rounded-full bg-brand-soft text-brand flex items-center justify-center mx-auto mb-7">
+                  <CheckCircle2 size={40} />
+                </span>
+                <h2 className="font-display text-3xl text-charcoal mb-3">Message sent.</h2>
+                <p className="text-charcoal/60 text-lg leading-relaxed max-w-md mx-auto">
+                  Thanks{form.name ? `, ${form.name.split(" ")[0]}` : ""} — your message has been
+                  received and our team will get back to you shortly. Need us sooner?
+                </p>
+                <a
+                  href={site.phoneHref}
+                  className="mt-8 inline-flex items-center gap-2 bg-brand text-white font-semibold px-7 py-3.5 rounded-full hover:bg-brand-dark transition-colors focus-ring"
+                >
+                  <Phone size={16} /> {site.phone}
+                </a>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="bg-white border border-charcoal/10 rounded-3xl p-8 md:p-10 shadow-card">
+                <h2 className="font-display text-2xl text-charcoal mb-6">Send us a message</h2>
+                <div className="space-y-5">
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-semibold text-charcoal mb-2">Name *</label>
+                      <input id="name" name="name" type="text" required value={form.name} onChange={handleChange} className={inputCls} placeholder="Your name" />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-semibold text-charcoal mb-2">Email *</label>
+                      <input id="email" name="email" type="email" required value={form.email} onChange={handleChange} className={inputCls} placeholder="you@example.com" />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-semibold text-charcoal mb-2">Phone</label>
+                    <input id="phone" name="phone" type="tel" value={form.phone} onChange={handleChange} className={inputCls} placeholder="+265 9XX XXX XXX" />
+                  </div>
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-semibold text-charcoal mb-2">Subject *</label>
+                    <select id="subject" name="subject" required value={form.subject} onChange={handleChange} className={inputCls}>
+                      <option value="" disabled>Select a topic</option>
+                      <option>New quote request</option>
+                      <option>Existing policy / renewal</option>
+                      <option>Report a claim</option>
+                      <option>General enquiry</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-semibold text-charcoal mb-2">Message *</label>
+                    <textarea id="message" name="message" rows={5} required value={form.message} onChange={handleChange} className={`${inputCls} resize-none`} placeholder="How can we help?" />
+                  </div>
+                  {error && (
+                    <p className="flex items-center gap-2 text-sm text-brand-dark bg-brand-soft border border-brand/30 rounded-xl px-4 py-3">
+                      <AlertCircle size={15} className="shrink-0" /> {error}
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={sending}
+                    className="w-full inline-flex items-center justify-center gap-2 bg-brand text-white font-semibold text-sm px-8 py-4 rounded-full hover:bg-brand-dark transition-colors focus-ring disabled:opacity-60"
+                  >
+                    {sending ? "Sending..." : "Send Message"} <Send size={16} />
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
