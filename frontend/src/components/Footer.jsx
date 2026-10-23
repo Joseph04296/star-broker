@@ -1,90 +1,146 @@
 import { NavLink } from "react-router-dom";
-import { Phone, Mail, MapPin, ShieldCheck } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { useSiteContent } from "../site/SiteContentContext";
 
-const EXPLORE = [
-  { label: "About", to: "/about" },
-  { label: "Insurance Solutions", to: "/services" },
+const ABOUT_LINKS = [
+  { label: "About Star", to: "/about" },
+  { label: "Our Services", to: "/services" },
   { label: "Insights", to: "/insights" },
-  { label: "Contact", to: "/contact" },
+  { label: "Contact Us", to: "/contact" },
+];
+
+const HELP_LINKS = [
+  { label: "Get a Quote", to: "/quote" },
+  { label: "Report a Claim", to: "/contact" },
+  { label: "FAQs", to: "/insights" },
+  { label: "Request Support", to: "/contact" },
 ];
 
 export default function Footer() {
-  const { site } = useSiteContent();
+  const { site, serviceCategories } = useSiteContent();
+  const services = serviceCategories.filter((cat) =>
+    ["personal", "business"].includes(cat.id),
+  );
+
   return (
-    <footer className="bg-charcoal text-white/80 relative overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-light/50 to-transparent" aria-hidden="true" />
+    <footer className="relative overflow-hidden bg-charcoal text-white/70">
+      <div
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-light/50 to-transparent"
+        aria-hidden="true"
+      />
 
-      <div className="max-w-7xl mx-auto px-5 md:px-8 pt-14 pb-10 grid md:grid-cols-12 gap-12">
-        {/* Left — Branding */}
-        <div className="md:col-span-4">
-          <div className="flex items-center gap-3 mb-5">
-            <span className="leading-none">
-              <span className="font-display text-xl font-semibold text-white block">Star</span>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-brand-light block mt-1">
-                Insurance Brokers
-              </span>
-            </span>
-          </div>
-          <p className="text-sm leading-relaxed text-white/55 max-w-sm">
-            Strong protection. Smarter decisions.
-          </p>
-          <div className="inline-flex items-center gap-2 mt-6 text-xs text-white/45 border border-white/15 rounded-full px-4 py-2">
-            <ShieldCheck size={14} className="text-brand-light" />
-            Registered with the Insurance Institute of Malawi
-          </div>
-        </div>
+      <div className="mx-auto max-w-7xl px-5 pb-10 pt-14 md:px-8">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
+          {/* Services and their covers */}
+          {services.map((cat) => (
+            <div key={cat.id}>
+              <NavLink
+                to={`/services/${cat.id}`}
+                className="text-sm font-semibold text-white transition-colors hover:text-brand-light"
+              >
+                {cat.label}
+              </NavLink>
+              <ul className="mt-3 space-y-2 text-sm">
+                {cat.items.map((item) => (
+                  <li key={item.name}>
+                    <NavLink
+                      to={`/services/${cat.id}`}
+                      className="text-white/55 transition-colors hover:text-white"
+                    >
+                      {item.name}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
-        {/* Middle — Explore */}
-        <div className="md:col-span-4 md:pl-8">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-light mb-5">Explore</h3>
-          <ul className="space-y-3 text-sm">
-            {EXPLORE.map((l) => (
-              <li key={l.to}>
-                <NavLink
-                  to={l.to}
-                  className="text-white/60 hover:text-white transition-colors focus-ring rounded"
+          {/* About */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-white">
+              About
+            </h3>
+            <ul className="mt-5 space-y-3 text-sm">
+              {ABOUT_LINKS.map((link) => (
+                <li key={link.label}>
+                  <NavLink
+                    to={link.to}
+                    className="text-white/55 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Help Center */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-white">
+              Help Center
+            </h3>
+            <ul className="mt-5 space-y-3 text-sm">
+              {HELP_LINKS.map((link) => (
+                <li key={link.label}>
+                  <NavLink
+                    to={link.to}
+                    className="text-white/55 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contacts */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-white">
+              Contacts
+            </h3>
+            <ul className="mt-5 space-y-4 text-sm">
+              <li className="flex items-center gap-3">
+                <Phone size={16} className="shrink-0 text-brand-light" />
+                <a
+                  href={site.phone2Href}
+                  className="text-white/60 transition-colors hover:text-white"
                 >
-                  {l.label}
-                </NavLink>
+                  {site.phone2}
+                </a>
               </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Right — Contact */}
-        <div className="md:col-span-4">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-light mb-5">Contact</h3>
-          <ul className="space-y-4 text-sm">
-            <li className="flex items-center gap-3">
-              <Phone size={16} className="shrink-0 text-brand-light" />
-              <a href={site.phoneHref} className="text-white/60 hover:text-white transition-colors">{site.phone}</a>
-            </li>
-            <li className="flex items-center gap-3">
-              <Phone size={16} className="shrink-0 text-brand-light" />
-              <a href={site.phone2Href} className="text-white/60 hover:text-white transition-colors">{site.phone2}</a>
-            </li>
-            <li className="flex items-center gap-3">
-              <Mail size={16} className="shrink-0 text-brand-light" />
-              <a href={`mailto:${site.email}`} className="text-white/60 hover:text-white transition-colors break-all">
-                {site.email}
-              </a>
-            </li>
-            <li className="flex items-start gap-3">
-              <MapPin size={16} className="shrink-0 mt-0.5 text-brand-light" />
-              <span className="text-white/60">{site.address}<br />{site.city}</span>
-            </li>
-          </ul>
+              <li className="flex items-center gap-3">
+                <Mail size={16} className="shrink-0 text-brand-light" />
+                <a
+                  href={`mailto:${site.email}`}
+                  className="break-all text-white/60 transition-colors hover:text-white"
+                >
+                  {site.email}
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
+                <MapPin size={16} className="mt-0.5 shrink-0 text-brand-light" />
+                <span className="text-white/60">
+                  {site.address}
+                  <br />
+                  {site.city}
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-5 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-white/35">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 py-6 text-xs text-white/35 md:flex-row md:px-8">
           <p>&copy; 2026 Star Insurance Brokers Ltd. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <NavLink to="#" className="hover:text-white/60 transition-colors">Privacy Policy</NavLink>
-            <NavLink to="#" className="hover:text-white/60 transition-colors">Terms of Use</NavLink>
+            <NavLink to="#" className="transition-colors hover:text-white/60">
+              Privacy Policy
+            </NavLink>
+            <NavLink to="#" className="transition-colors hover:text-white/60">
+              Terms of Use
+            </NavLink>
           </div>
         </div>
       </div>

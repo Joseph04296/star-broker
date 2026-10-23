@@ -573,16 +573,10 @@ export const IMAGES = {
   chase: claimChase,
   broker: aboutBroker,
   story: aboutStory,
-  office:
-    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80",
-  meeting:
-    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1600&q=80",
-  handshake:
-    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80",
-  family:
-    "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1600&q=80",
-  documents:
-    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80",
-  claims:
-    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=80",
+  office: heroClaims,
+  meeting: heroBusiness,
+  handshake: heroGetStarted,
+  family: heroFamily,
+  documents: aboutBroker,
+  claims: claimChase,
 };

@@ -1,96 +1,78 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { ArrowRight, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useSiteContent } from "../site/SiteContentContext";
 import heroBg from "../assets/herobg.jpg";
 
 export default function Hero() {
-  const { site, heroSlides } = useSiteContent();
+  const { heroSlides } = useSiteContent();
   const slide = heroSlides[0];
+  const backgroundImages = [
+    ...new Set([heroBg, ...heroSlides.map((item) => item.image)]),
+  ]
+    .filter(Boolean)
+    .slice(0, 3);
+  const [activeImage, setActiveImage] = useState(0);
+
+  useEffect(() => {
+    if (backgroundImages.length < 2) return undefined;
+
+    const interval = setInterval(() => {
+      setActiveImage((current) => (current + 1) % backgroundImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
 
   return (
-    <section className="relative overflow-hidden bg-mist">
+    <section className="relative h-[84vh] min-h-[560px] max-h-[860px] overflow-hidden bg-charcoal text-white">
+      {backgroundImages.map((image, index) => (
+        <img
+          key={image}
+          src={image}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+            index === activeImage ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
+
+      {/* Lighter overlay than before so more of the image shows through. */}
       <div
-        className="pointer-events-none absolute -left-40 -top-24 h-[520px] w-[520px] rounded-full bg-brand/[0.06] blur-3xl"
+        className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-transparent"
         aria-hidden="true"
       />
-      <div
-        className="pointer-events-none absolute -right-28 bottom-0 h-[420px] w-[420px] rounded-full border border-brand/10"
-        aria-hidden="true"
-      />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-        <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-charcoal/10 bg-white px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-charcoal/70">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            {slide.eyebrow}
-          </span>
+      <div className="relative z-10 flex h-full items-center">
+        <div className="mx-auto w-full max-w-7xl px-5 md:px-8">
+          <div className="max-w-3xl pb-16 sm:pb-20">
+            <h1 className="max-w-2xl font-hero text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+              Helping protect what matters most
+            </h1>
 
-          <h1 className="mt-7 font-hero text-4xl font-bold leading-[1.06] tracking-tight text-charcoal sm:text-5xl md:text-6xl">
-            {slide.title[0]} <span className="text-brand">{slide.accent}</span>
-          </h1>
+            <p className="mt-5 max-w-xl text-base leading-snug text-white/90 sm:mt-6 sm:text-lg md:text-xl">
+              {slide.subtitle}
+            </p>
 
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-charcoal/65 sm:text-lg">
-            {slide.subtitle}
-          </p>
-
-          <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-            <NavLink
-              to={slide.cta.to}
-              className="group inline-flex items-center gap-2.5 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-ring sm:px-7 sm:py-4"
-            >
-              {slide.cta.label}
-              <ArrowRight
-                size={17}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </NavLink>
-            <NavLink
-              to={slide.cta2.to}
-              className="inline-flex items-center gap-2.5 rounded-full border border-charcoal/20 px-6 py-3.5 text-sm font-semibold text-charcoal transition-colors hover:border-brand hover:text-brand focus-ring sm:px-7 sm:py-4"
-            >
-              {slide.cta2.label}
-            </NavLink>
-          </div>
-
-          <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-charcoal/55">
-            <span className="inline-flex items-center gap-2">
-              <ShieldCheck size={16} className="text-brand" />
-              Licensed insurance brokerage
-            </span>
-            <span className="h-1 w-1 rounded-full bg-charcoal/25" aria-hidden="true" />
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin size={14} className="text-charcoal/40" />
-              {site.city}
-            </span>
-          </div>
-        </div>
-
-        <div className="relative mx-auto w-full max-w-[520px] lg:max-w-none">
-          <div
-            className="absolute -inset-3 rounded-[2.75rem] border border-brand/20 sm:-inset-4"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -bottom-3 -right-3 h-24 w-24 rounded-[1.75rem] bg-brand/10"
-            aria-hidden="true"
-          />
-
-          <div className="relative aspect-square overflow-hidden rounded-[2.5rem] shadow-lift sm:aspect-[4/3] lg:aspect-square">
-            <img
-              src={heroBg}
-              alt="Protection for individuals and businesses in Malawi"
-              className="h-full w-full object-cover"
-              loading="eager"
-            />
-          </div>
-
-          <div className="absolute -left-4 bottom-6 hidden items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-card backdrop-blur sm:flex">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10 text-brand">
-              <ShieldCheck size={18} />
-            </span>
-            <div className="leading-tight">
-              <p className="text-xs font-bold text-charcoal">Licensed Broker</p>
-              <p className="text-[11px] text-charcoal/55">Advice you can trust</p>
+            <div className="mt-7 flex flex-wrap items-center gap-3 sm:mt-9 sm:gap-4">
+              <NavLink
+                to={slide.cta.to}
+                className="group inline-flex items-center gap-2.5 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-ring sm:px-7 sm:py-4"
+              >
+                {slide.cta.label}
+                <ArrowRight
+                  size={17}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </NavLink>
+              <NavLink
+                to={slide.cta2.to}
+                className="inline-flex items-center gap-2.5 rounded-full border border-white/35 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-ring sm:px-7 sm:py-4"
+              >
+                {slide.cta2.label}
+              </NavLink>
             </div>
           </div>
         </div>

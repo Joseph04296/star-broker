@@ -72,8 +72,8 @@ export default function Contact() {
     <div>
       <PageHero
         title="Let's Start With a Conversation."
-        description="Whether you're exploring insurance options or want to discuss your organisation's protection needs, we'd be happy to hear from you."
         image={IMAGES.office}
+        cta={null}
       />
 
       {/* Contact cards */}

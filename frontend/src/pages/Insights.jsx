@@ -17,8 +17,8 @@ export default function Insights() {
       <PageHero
         title="Insurance,"
         accent="explained simply."
-        description="Guides, tips and answers — written in plain language, so you can make decisions with confidence."
-        image={IMAGES.documents}
+        image={IMAGES.chase}
+        cta={null}
       />
 
       {/* Featured Insights */}

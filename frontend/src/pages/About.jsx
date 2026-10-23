@@ -30,8 +30,8 @@ export default function About() {
     <div>
       <PageHero
         title="Strength Behind Every Decision."
-        description="Learn more about Star Insurance Brokers Ltd and our approach to insurance and risk."
         image={IMAGES.meeting}
+        cta={null}
       />
 
       {/* Who We Are */}

@@ -12,6 +12,8 @@ body {
 
 h1, h2, h3, h4 {
   @apply font-display;
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 100;
 }
 
 ::selection {
@@ -28,11 +30,26 @@ h1, h2, h3, h4 {
   }
 }
 
+/* ---- Sharp corners ---- */
+/* Every rounded rectangle, input and button renders with square corners.
+   True circles (icon badges, decorative dots and the category hero image)
+   keep their shape. */
+.rounded,
+[class*="rounded-"]:not([class*="rounded-full"]),
+a[class*="rounded-full"],
+button[class*="rounded-full"],
+[class*="rounded-full"][class*="px-"],
+input,
+textarea,
+select {
+  border-radius: 0 !important;
+}
+
 /* ---- Focus rings ---- */
 .focus-ring:focus-visible {
   outline: 2px solid #C62828;
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 /* ---- Reveal-on-scroll ---- */

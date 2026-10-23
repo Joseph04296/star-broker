@@ -1,9 +1,28 @@
 import { Navigate, NavLink, useParams } from "react-router-dom";
-import { ArrowRight, Check, ShieldCheck } from "lucide-react";
-import SectionHeading from "../components/SectionHeading";
-import Reveal from "../components/Reveal";
-import ImagePlaceholder from "../components/ImagePlaceholder";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import QuoteCTA from "../components/QuoteCTA";
 import { useSiteContent } from "../site/SiteContentContext";
+
+const CATEGORY_COPY = {
+  personal: {
+    title: "Personal insurance, made simple.",
+    body: "Cover for you, your family and the things you own — arranged around your needs and budget.",
+    productsBody:
+      "The personal risk landscape is evolving rapidly and no two clients are alike. We carefully assess your individual risk exposures to provide customised personal insurance coverages to help prevent loss — and cover it if it occurs.",
+  },
+  business: {
+    title: "Business cover built around you.",
+    body: "Protection for your premises, people and liabilities — tailored to how your business operates.",
+    productsBody:
+      "Every business carries its own mix of risk. We assess your premises, people, operations and liabilities to provide customised commercial insurance coverages that help prevent loss — and cover it if it occurs.",
+  },
+  benefits: {
+    title: "Employee benefits for your team.",
+    body: "Group medical and group life cover that supports your people and keeps your organisation moving.",
+    productsBody:
+      "Your people are your most valuable asset and every workforce is different. We assess your team's needs to arrange group medical and group life schemes that support their wellbeing and your organisation's continuity.",
+  },
+};
 
 export default function ServiceCategory() {
   const { categoryId } = useParams();
@@ -16,191 +35,140 @@ export default function ServiceCategory() {
   if (!cat) return <Navigate to="/services" replace />;
 
   const items = cat.items || [];
+  const copy = CATEGORY_COPY[cat.id] || {
+    title: cat.tagline,
+    body: cat.intro,
+    productsBody: cat.intro,
+  };
+
+  const collage = [
+    ...new Set([cat.image, ...items.map((item) => item.image)].filter(Boolean)),
+  ].slice(0, 3);
 
   return (
     <div>
-      {/* Category switcher — lets visitors move between the three
-          categories without going back to the services index. */}
-      {serviceCategories.length > 1 && (
-        <div className="sticky top-[76px] z-40 border-b border-charcoal/10 bg-white">
-          <div className="max-w-7xl mx-auto px-5 md:px-8 py-3.5 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-charcoal/45 mr-2">
-              Categories
+      {/* Hero */}
+      <section className="relative isolate overflow-hidden bg-charcoal text-white">
+        {cat.image && (
+          <img
+            src={cat.image}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 h-full w-full object-cover"
+            loading="eager"
+          />
+        )}
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-black/75 via-black/50 to-black/20"
+          aria-hidden="true"
+        />
+
+        <div className="mx-auto flex min-h-[420px] max-w-7xl items-center px-5 py-16 md:min-h-[520px] md:px-8 md:py-24">
+          <div className="max-w-2xl">
+            <span className="eyebrow mb-5 inline-block text-brand-light">
+              {cat.label}
             </span>
-            {serviceCategories.map((c) => (
-              <NavLink
-                key={c.id}
-                to={`/services/${c.id}`}
-                className={({ isActive }) =>
-                  `inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-full transition-colors focus-ring ${
-                    isActive
-                      ? "bg-brand text-white"
-                      : "text-charcoal/65 border border-charcoal/15 hover:border-brand/50 hover:text-brand"
-                  }`
-                }
-              >
-                {c.id === cat.id && <ShieldCheck size={14} />}
-                {c.label}
-              </NavLink>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Page header */}
-      <section className="pt-14 pb-12 md:pt-20 md:pb-16 bg-white">
-        <div className="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          <div className="max-w-3xl">
-            <span className="eyebrow text-brand mb-5">{cat.label}</span>
-            <h1 className="font-display font-bold text-3xl md:text-5xl leading-[1.08] tracking-tight text-charcoal">
-              {cat.tagline}
+            <h1 className="font-hero text-4xl font-bold leading-[1.06] tracking-tight sm:text-5xl md:text-6xl">
+              {copy.title}
             </h1>
-            <p className="mt-5 text-base md:text-lg leading-relaxed text-charcoal/65 max-w-2xl">
-              {cat.intro}
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
+              {copy.body}
             </p>
-          </div>
-          <div className="rounded-2xl overflow-hidden shadow-card">
-            {cat.image ? (
-              <img
-                src={cat.image}
-                alt={cat.label}
-                className="w-full aspect-[4/3] object-cover"
-                loading="eager"
-              />
-            ) : (
-              <ImagePlaceholder
-                label={`Add a photo for ${cat.label}`}
-                aspect="aspect-[4/3]"
-              />
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Covers in this category */}
-      <section className="py-16 md:py-24 bg-mist">
-        <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <SectionHeading
-            eyebrow="Cover Options"
-            title="Every cover in"
-            accent={`${cat.label}.`}
-            description={`We arrange the following ${cat.label.toLowerCase()} covers on your behalf, comparing terms across Malawi's insurers so you can choose with confidence.`}
-            className="mb-14"
-          />
-
-          <div className="space-y-16 md:space-y-20">
-            {items.map((item, idx) => {
-              const Icon = item.icon;
-              const flipped = idx % 2 === 1;
-
-              return (
-                <Reveal key={item.name}>
-                  <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-                    {/* Image */}
-                    <div className={flipped ? "lg:order-2" : ""}>
-                      {item.image ? (
-                        <div className="rounded-2xl overflow-hidden shadow-card">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full aspect-[4/3] object-cover"
-                            loading="lazy"
-                          />
-                        </div>
-                      ) : (
-                        <ImagePlaceholder
-                          label={`Add a photo for ${item.name}`}
-                          aspect="aspect-[4/3]"
-                        />
-                      )}
-                    </div>
-
-                    {/* Detail */}
-                    <div className={flipped ? "lg:order-1" : ""}>
-                      <span className="inline-flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand mb-4">
-                        {Icon && <Icon size={16} strokeWidth={1.75} />}
-                        {cat.label}
-                      </span>
-
-                      <h3 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-4">
-                        {item.name}
-                      </h3>
-
-                      <p className="text-charcoal/70 text-base md:text-lg leading-relaxed mb-7">
-                        {item.desc}
-                      </p>
-
-                      {item.benefits?.length > 0 && (
-                        <>
-                          <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-charcoal/50 mb-4">
-                            What's typically included
-                          </h4>
-                          <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3 mb-8">
-                            {item.benefits.map((b) => (
-                              <li
-                                key={b}
-                                className="flex items-start gap-3 text-sm text-charcoal/75"
-                              >
-                                <Check size={16} className="text-brand shrink-0 mt-0.5" />
-                                {b}
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-
-                      {item.who && (
-                        <p className="text-sm text-charcoal/60 leading-relaxed border-l-2 border-brand/40 pl-4 mb-8">
-                          <span className="font-semibold text-charcoal/80">Who it's for: </span>
-                          {item.who}
-                        </p>
-                      )}
-
-                      <NavLink
-                        to={`/quote?type=${encodeURIComponent(item.name)}`}
-                        className="group inline-flex items-center gap-2.5 bg-brand text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-brand-dark transition-colors focus-ring"
-                      >
-                        Request a Quote
-                        <ArrowRight
-                          size={16}
-                          className="transition-transform group-hover:translate-x-1"
-                        />
-                      </NavLink>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Next steps */}
-      <section className="py-16 md:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          <SectionHeading
-            eyebrow="Not Sure Where to Start?"
-            title="Tell us what you need"
-            accent="and we'll point you right."
-            description="A short conversation is often enough. We'll ask about what you're protecting, who needs cover, and what matters most — then come back with options compared across insurers."
-          />
-          <div className="flex flex-wrap gap-4 lg:justify-end">
             <NavLink
               to="/quote"
-              className="group inline-flex items-center gap-2 bg-brand text-white font-semibold text-sm px-7 py-4 rounded-full hover:bg-brand-dark transition-colors focus-ring"
+              className="group mt-8 inline-flex items-center gap-2.5 rounded-full bg-brand px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-ring"
             >
-              Request a Quote
-              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </NavLink>
-            <NavLink
-              to="/contact"
-              className="inline-flex items-center gap-2 border border-charcoal/20 text-charcoal font-semibold text-sm px-7 py-4 rounded-full hover:border-brand hover:text-brand transition-colors focus-ring"
-            >
-              Talk to an Advisor
+              Get a Quote
+              <ArrowRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
             </NavLink>
           </div>
         </div>
       </section>
+
+      {/* Products and services */}
+      <section className="bg-mist py-20 md:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 md:px-8 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <h2 className="font-display text-3xl font-bold leading-[1.08] tracking-tight text-charcoal md:text-5xl">
+              Products and services{" "}
+              <span className="text-charcoal/60">
+                to cover what matters most.
+              </span>
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-charcoal/65 md:text-lg">
+              {copy.productsBody}
+            </p>
+
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              {items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.name}>
+                    <NavLink
+                      to={`/quote?type=${encodeURIComponent(item.name)}`}
+                      className="group flex items-center gap-3.5 rounded-xl border border-charcoal/10 bg-white px-4 py-3.5 transition-all hover:border-brand/40 hover:shadow-card focus-ring"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-charcoal text-white">
+                        {Icon && <Icon size={18} strokeWidth={1.75} />}
+                      </span>
+                      <span className="flex-1 text-sm font-semibold text-charcoal transition-colors group-hover:text-brand">
+                        {item.name}
+                      </span>
+                      <ArrowUpRight
+                        size={15}
+                        className="text-charcoal/35 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-brand"
+                      />
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          {collage.length > 0 && (
+            <div className="grid grid-cols-2 gap-4">
+              {collage[0] && (
+                <div className="col-span-2 overflow-hidden rounded-2xl shadow-card">
+                  <img
+                    src={collage[0]}
+                    alt=""
+                    className="aspect-[16/10] w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              {collage.slice(1, 3).map((img) => (
+                <div
+                  key={img}
+                  className={`overflow-hidden rounded-2xl shadow-card ${
+                    collage.length === 2 ? "col-span-2" : ""
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt=""
+                    className={`w-full object-cover ${
+                      collage.length === 2 ? "aspect-[16/9]" : "aspect-square"
+                    }`}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <QuoteCTA
+        image={cat.image}
+        eyebrow="NOT SURE WHERE TO START?"
+        title="Tell us what you need"
+        accent="and we'll point you right."
+        body="A short conversation is often enough. We'll ask about what you're protecting, who needs cover and what matters most — then come back with options compared across insurers."
+      />
     </div>
   );
 }

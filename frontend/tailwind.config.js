@@ -90,8 +90,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ["Manrope", "Inter", "system-ui", "sans-serif"],
-        hero: ["Manrope", "Inter", "system-ui", "sans-serif"],
+        display: ['"Noto Serif"', "serif"],
+        hero: ['"Noto Serif"', "serif"],
         body: ["Inter", "system-ui", "sans-serif"],
       },
       boxShadow: {

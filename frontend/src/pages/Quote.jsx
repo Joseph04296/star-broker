@@ -95,8 +95,8 @@ export default function Quote() {
       <PageHero
         title="Request your"
         accent="free quote."
-        description="Tell us a little about what you'd like covered and we'll come back with options compared across insurers — no obligation, no pressure."
         image={IMAGES.handshake}
+        cta={null}
       />
 
       <section className="py-20 md:py-24 bg-white">
