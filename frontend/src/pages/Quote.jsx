@@ -184,9 +184,8 @@ export default function Quote() {
                   Thank you{form.name ? `, ${form.name.split(" ")[0]}` : ""}.
                 </h2>
                 <p className="text-charcoal/60 text-lg leading-relaxed max-w-md mx-auto mb-8">
-                  We've received your {form.insuranceType ? `${form.insuranceType.toLowerCase()} ` : ""}request and
-                  will get back to you{form.phone ? ` on ${form.phone}` : ""} shortly
-                  with quote options.
+                  We've received your {form.insuranceType ? `${form.insuranceType.toLowerCase()} ` : ""}request
+                  and will get back to you{form.phone ? ` on ${form.phone}` : ""} shortly.
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
                   <a
@@ -319,7 +318,7 @@ export default function Quote() {
                     <textarea
                       id="details" rows={6} value={form.details} onChange={update("details")}
                       className={`${inputCls} resize-none`}
-                      placeholder="What are you looking to cover? For example: 'A 2019 Toyota Hilux for my transport business' or 'Group medical for 30 employees'. Any detail helps us quote accurately."
+                      placeholder="What would you like to cover? Any detail helps us quote accurately."
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();

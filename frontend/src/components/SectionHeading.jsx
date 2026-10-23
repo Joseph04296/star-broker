@@ -25,7 +25,7 @@ export default function SectionHeading({
         {accent && <span className={accentTone}>{accent}</span>}
       </h2>
       {description && (
-        <p className={`mt-5 text-base md:text-lg leading-relaxed ${descTone} max-w-2xl ${align === "center" ? "mx-auto" : ""}`}>
+        <p className={`mt-5 text-base md:text-lg leading-relaxed ${descTone} max-w-xl ${align === "center" ? "mx-auto" : ""}`}>
           {description}
         </p>
       )}

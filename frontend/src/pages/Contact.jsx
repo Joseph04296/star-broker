@@ -119,7 +119,7 @@ export default function Contact() {
               eyebrow="Find Us"
               title="Our Office in"
               accent="Blantyre."
-              description="Our office is at Delamere House, 5th Floor, Room 515, North East Wing — but for anything that can be handled remotely, we're only a call or email away."
+              description="Visit us at Delamere House, 5th Floor, Room 515, North East Wing — or reach us by phone or email."
               className="mb-8"
             />
             <Reveal className="rounded-2xl overflow-hidden border border-charcoal/10 shadow-card mb-8">
@@ -152,7 +152,7 @@ export default function Contact() {
                 <h2 className="font-display text-3xl text-charcoal mb-3">Message sent.</h2>
                 <p className="text-charcoal/60 text-lg leading-relaxed max-w-md mx-auto">
                   Thanks{form.name ? `, ${form.name.split(" ")[0]}` : ""} — your message has been
-                  received and our team will get back to you shortly. Need us sooner?
+                  received. Our team will get back to you shortly.
                 </p>
                 <a
                   href={site.phoneHref}

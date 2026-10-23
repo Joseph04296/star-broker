@@ -45,18 +45,14 @@ export default function About() {
             <div className="mt-8 space-y-5 text-charcoal/65 leading-relaxed text-[15px]">
               <Reveal>
                 <p>
-                  We help individuals, businesses and organisations navigate
-                  insurance and risk with greater confidence. By comparing
-                  options across multiple insurers, we work to find cover that
-                  fits your circumstances and budget.
+                  Star helps individuals, businesses and organisations
+                  understand their protection needs and find cover that fits.
                 </p>
               </Reveal>
               <Reveal delay={100}>
                 <p>
-                  Public insurer directories confirm Star's presence as an
-                  insurance broker in Blantyre. Our team brings together
-                  experience across personal, commercial and employee benefits
-                  lines of insurance.
+                  Our Blantyre-based team brings experience across personal,
+                  commercial and employee benefits insurance.
                 </p>
               </Reveal>
               <Reveal delay={150}>

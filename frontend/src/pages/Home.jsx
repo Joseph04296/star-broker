@@ -23,7 +23,7 @@ export default function Home() {
             <SectionHeading
               eyebrow="About Us"
               title="Protection Shouldn't Be a Guess."
-              description="Insurance decisions can be complex. Star is positioned to help clients better understand their protection needs and explore solutions that fit their personal, business or organisational circumstances. Through insurance broking and advisory services, our focus is on helping clients move from uncertainty to clarity."
+              description="Star helps individuals, businesses and organisations understand their protection needs and move from uncertainty to clarity."
             />
             <Reveal delay={200}>
               <NavLink
